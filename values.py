@@ -27,7 +27,6 @@ def read_calibrations(filename):
     return total
 
 
-# strings = ["mxmkjvgsdzfhseightonetwoeight7", "3five4s84four9rtbzllggz"]
 # numbers = [["8", "1", "2", "8", "7"], ["3", "5", "4", "8", "4", "4", "9"], ["1"]]
 
 
@@ -59,3 +58,68 @@ def read_calibrations(filename):
 #     for s in strings:
 #         numbers = filter(lambda x: x.isdigit(), s)
 #         print(list(numbers))
+
+
+# Part 2
+substring_numbers = (
+    "zero",
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+)
+
+strings = (
+    "mxmkjvgsdzfhseightonetwo7eight",
+    "five34s84four9rtbzllggz",
+    "nineninedtfivefive",
+    "sixnine6njhqrsix",
+)
+
+
+def find_substring_values(filename):
+    """Reads a file, finds substrings for numbers, and converts them to integers.
+
+    Args:
+        filename (str): The name of the file to read.
+
+    Returns:
+        list: A list of integers.
+    """
+
+    for s in strings:
+        start_string = ""
+        end_string = ""
+        for sub in substring_numbers:
+            if sub in s and s.startswith(sub) and s.endswith(sub):
+                start_string_position = s.find(sub) + len(sub)
+                start_string = s[:start_string_position]
+                end_string_position = len(s) - len(sub)
+                end_string = s[end_string_position:]
+                joined_strings = [start_string, end_string]
+                print("****************")
+                print("First: ", start_string)
+                print("Last: ", end_string)
+                print("****************")
+                break
+            if sub in s and s.endswith(sub):
+                end_string_position = len(s) - len(sub)
+                end_string = s[end_string_position:]
+                joined_strings = [start_string, end_string]
+                print("****************")
+                print("Last: ", end_string)
+                print("****************")
+            if sub in s and s.startswith(sub):
+                start_string_position = s.find(sub) + len(sub)
+                start_string = s[:start_string_position]
+                joined_strings = [start_string, end_string]
+                print("****************")
+                print("First: ", start_string)
+                print("****************")
+                break
+        print(joined_strings)
