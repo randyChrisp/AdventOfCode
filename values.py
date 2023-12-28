@@ -177,58 +177,98 @@ def find_substrings_sum(filename):
 
     for s in strings:
         count = 0
-        start_string = ""
-        end_string = ""
-        # joined_number_list.append(key_index_list)
-        key_index_list = []
+        key_index_dict = {}
         for key, value in substring_key_values.items():
-            key_index = 0
+            single_key_index = 0
             start_index = 0
             end_index = None
             if key in s and s.startswith(key) and s.endswith(key):
                 start_index = s.find(key)
-                key_index_list.append(start_index)
-                # start_string_position = s.find(key) + len(key)
-                # start_string = s[:start_string_position]
-                end_string_position = len(s) - len(key)
-                end_string = s[end_string_position:]
-                key_index_list.append(end_string_position)
-                # joined_number_list.append(key_index_list)
-                # print("Start, End ", joined_number_list)
-                # joined_strings = [start_string, end_string]
-                # joined_number_list = [x for x in key_index_list if x > -1]
+                start_index_value = value
+                end_index = len(s) - len(key)
+                end_index_value = value
+                start_end_dict = {
+                    start_index: start_index_value,
+                    end_index: end_index_value,
+                }
+                key_index_dict.update(start_end_dict)
                 break
-            # if key in s and s.endswith(key):
-            #     end_string_position = len(s) - len(key)
-            #     end_string = s[end_string_position:]
-            #     joined_strings = [start_string, end_string]
-            # if key in s and s.startswith(key):
-            #     start_string_position = s.find(key) + len(key)
-            #     start_string = s[:start_string_position]
-            #     joined_strings = [start_string, end_string]
             count = s.count(key)
             if count > 1:
                 start_index = s.find(key)
-                key_index_list.append(start_index)
+                start_index_value = value
                 end_index = s.rfind(key)
-                key_index_list.append(end_index)
-                # joined_number_list.append(key_index_list)
-                # print("Greater than 1 ", joined_number_list)
+                end_index_value = value
+                greater_than_one_dict = {
+                    start_index: start_index_value,
+                    end_index: end_index_value,
+                }
+                key_index_dict.update(greater_than_one_dict)
             elif s.find(key) > -1:
-                key_index = s.find(key)
-                key_index_list.append(key_index)
-                # joined_number_list.append(key_index_list)
-                # print("Else ", joined_number_list)
-        joined_number_list.append(key_index_list)
-    # print("Key Index List - ", key_index_list)
+                single_key_index = s.find(key)
+                single_key_index_value = value
+                single_key_dict = {
+                    single_key_index: single_key_index_value,
+                }
+                key_index_dict.update(single_key_dict)
+        joined_number_list.append(key_index_dict)
+    # print("Key Index Dict - ", key_index_dict)
 
-    # print("Joined Strings: ", joined_strings)
-    # print("Joined Number List: ", joined_number_list)
+    print("Joined Number List: ", joined_number_list)
+
+    converted_number_list = []
 
     for n in joined_number_list:
-        min_max_values = list(minmax(n))
-        print("Min Max Values: ", min_max_values)
-        print("Min Max Values: ", min_max_values[0], min_max_values[1])
+        first_key = None
+        last_key = None
+        joined_string_values = [0, 0]
+        for k, v in n.items():
+            int_values = []
+            if first_key is None:
+                first_key = k
+                joined_string_values[0] = str(v)
+            elif k < first_key:
+                first_key = k
+                joined_string_values[0] = str(v)
+            elif last_key is None:
+                last_key = k
+                joined_string_values[1] = str(v)
+            else:
+                if k > last_key:
+                    last_key = k
+                    joined_string_values[1] = str(v)
+        joined_string_values = "".join(joined_string_values)
+        print("Joined String Values: ", joined_string_values)
+        print("Type: ", type(joined_string_values))
+        converted_number_list.append(joined_string_values)
+        print("Converted Number List: ", converted_number_list)
+        print("Type: ", type(converted_number_list))
+        converted_number_list = [int(i) for i in converted_number_list]
+        total = sum(converted_number_list)
+        print("Total: ", total)
+        # int_values.append(joined_string_values)
+        # print("Int Values: ", int_values)
+        # total = sum(int_values)
+        # converted_number_list.append(total)
+        # full_total = sum(converted_number_list)
+    # total = sum(int_values)
+    # print("Converted Number List: ", converted_number_list)
+    # print("Full Total: ", full_total)
+    # print("Int Values: ", int_values)
+
+    # print("First Key: ", first_key, "Last Key: ", last_key)
+    # print("Joined Values: ", joined_string_values)
+    # print("Converted Number List: ", converted_number_list)
+
+    # print("Calculations: ", calculations)
+
+    # min_max_pairs = minmax(n.keys()), n.get(k)
+    # print("Min Max Pairs: ", min_max_pairs)
+
+    # for n in joined_number_list:
+    #     min_max_keys = minmax(n.keys())
+    #     print("Min Max Values: ", min_max_keys)
+    # print("Min Max Values: ", min_max_values[0], min_max_values[1])
     # print("****************")
     # print("****************")
     # multiplied_value = value * count
