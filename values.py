@@ -27,7 +27,6 @@ def read_calibrations(filename):
     return total
 
 
-# strings = ["mxmkjvgsdzfhseightonetwoeight7", "3five4s84four9rtbzllggz"]
 # numbers = [["8", "1", "2", "8", "7"], ["3", "5", "4", "8", "4", "4", "9"], ["1"]]
 
 
@@ -59,3 +58,181 @@ def read_calibrations(filename):
 #     for s in strings:
 #         numbers = filter(lambda x: x.isdigit(), s)
 #         print(list(numbers))
+
+
+# Part 2
+substring_numbers = (
+    "zero",
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+)
+
+
+def find_substring_values(filename):
+    """Reads a file, finds substrings for numbers.
+
+    Args:
+        filename (str): The name of the file to read.
+
+    Returns:
+        list: A list of strings.
+    """
+
+    for s in strings:
+        start_string = ""
+        end_string = ""
+        for sub in substring_numbers:
+            if sub in s and s.startswith(sub) and s.endswith(sub):
+                start_string_position = s.find(sub) + len(sub)
+                start_string = s[:start_string_position]
+                end_string_position = len(s) - len(sub)
+                end_string = s[end_string_position:]
+                joined_strings = [start_string, end_string]
+                print("****************")
+                print("First: ", start_string)
+                print("Last: ", end_string)
+                print("****************")
+                break
+            if sub in s and s.endswith(sub):
+                end_string_position = len(s) - len(sub)
+                end_string = s[end_string_position:]
+                joined_strings = [start_string, end_string]
+                print("****************")
+                print("Last: ", end_string)
+                print("****************")
+            if sub in s and s.startswith(sub):
+                start_string_position = s.find(sub) + len(sub)
+                start_string = s[:start_string_position]
+                joined_strings = [start_string, end_string]
+                print("****************")
+                print("First: ", start_string)
+                print("****************")
+                break
+        print(joined_strings)
+
+
+strings = (
+    "mxmkjvgsdzfhseightonetwo7eight",
+    "five34s84four9rtbzllggz",
+    "nineninedtfivefive",
+    "sixnine6njhqrsix",
+)
+
+substring_key_values = {
+    "0": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8,
+    "9": 9,
+    "zero": 0,
+    "one": 1,
+    "two": 2,
+    "three": 3,
+    "four": 4,
+    "five": 5,
+    "six": 6,
+    "seven": 7,
+    "eight": 8,
+    "nine": 9,
+}
+
+
+def find_substrings_sum(filename):
+    """Reads a file, finds number substrings and digits.
+       Finds the first and last index of the substrings.
+       Converts to integers and returns the sum.
+
+    Args:
+        filename (str): The name of the file to read.
+
+    Returns:
+        list: A list of integers.
+    """
+
+    joined_number_list = []
+
+    with open(filename, mode="rt", encoding="utf-8") as f:
+        lines = f.readlines()
+        for l in lines:
+            count = 0
+            key_index_dict = {}
+            for key, value in substring_key_values.items():
+                single_key_index = 0
+                start_index = 0
+                end_index = None
+                if key in l and l.startswith(key) and l.endswith(key):
+                    start_index = l.find(key)
+                    start_index_value = value
+                    end_index = len(l) - len(key)
+                    end_index_value = value
+                    start_end_dict = {
+                        start_index: start_index_value,
+                        end_index: end_index_value,
+                    }
+                    key_index_dict.update(start_end_dict)
+                    break
+                count = l.count(key)
+                if count > 1:
+                    start_index = l.find(key)
+                    start_index_value = value
+                    end_index = l.rfind(key)
+                    end_index_value = value
+                    greater_than_one_dict = {
+                        start_index: start_index_value,
+                        end_index: end_index_value,
+                    }
+                    key_index_dict.update(greater_than_one_dict)
+                elif l.find(key) > -1:
+                    single_key_index = l.find(key)
+                    single_key_index_value = value
+                    single_key_dict = {
+                        single_key_index: single_key_index_value,
+                    }
+                    key_index_dict.update(single_key_dict)
+            joined_number_list.append(key_index_dict)
+
+    print("Joined Number List: ", joined_number_list)
+
+    converted_number_list = []
+
+    for n in joined_number_list:
+        first_key = None
+        last_key = None
+        joined_string_values = ["0", "0"]
+        for k, v in n.items():
+            if first_key is None:
+                first_key = k
+                last_key = k
+                joined_string_values[0] = str(v)
+                joined_string_values[1] = str(v)
+            elif k < first_key:
+                first_key = k
+                joined_string_values[0] = str(v)
+            elif last_key is None:
+                last_key = k
+                joined_string_values[1] = str(v)
+            else:
+                if k > last_key:
+                    last_key = k
+                    joined_string_values[1] = str(v)
+        joined_string_values = "".join(joined_string_values)
+        # print("Joined String Values: ", joined_string_values)
+        # print("Type: ", type(joined_string_values))
+        converted_number_list.append(joined_string_values)
+        # print("Converted Number List: ", converted_number_list)
+        # print("Type: ", type(converted_number_list))
+        converted_number_list = [int(i) for i in converted_number_list]
+        total = sum(converted_number_list)
+        print("Total: ", total)
